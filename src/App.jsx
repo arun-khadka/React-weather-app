@@ -7,17 +7,27 @@ import { useEffect, useState } from 'react'
 import getFormattedWeatherData from './weatherService'
 
 function App() {
+  const [city, setCity]  = useState('Paris')
   const [weather, setWeather] = useState(null)
   const [units, setUnits] = useState('metric')
 
+
   useEffect(() => {
     const fetchWeatherData = async () => {
-      const data = await getFormattedWeatherData('Seoul', units);
+      const data = await getFormattedWeatherData(city, units)
       setWeather(data)
     }
-    fetchWeatherData();
-  },[])
+    fetchWeatherData()
+  },[city, units])
+  
+  const handleUnitsClick = (e) => {
+    const button = e.currentTarget;
+    const currentUnit = button.innerText.slice(1);
 
+    const isCelsius = currentUnit === 'C';
+    button.innerText = isCelsius ? '°F' : '°C';
+    setUnits(isCelsius ? 'metric' : 'imperial');
+  }
 
   return (
      <div className='app' style={{backgroundImage: `url(${coldBg})`}}>
@@ -26,8 +36,15 @@ function App() {
             weather && (
               <div className='container'>
               <div className='section section__inputs'>
-                <input type="text" name='city' placeholder='Enter city...' />
-                <button className='btn'>°F</button>
+                <input type="text" 
+                 name='city' 
+                 onChange={(e) => setCity(e.target.value)}
+                 placeholder='City / Location...' />
+
+                <button onClick={handleUnitsClick}
+                 className='btn'>°F
+                </button>
+
               </div>
   
               <div className='section section__temperature'>
