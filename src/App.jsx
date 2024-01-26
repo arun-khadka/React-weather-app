@@ -2,6 +2,7 @@ import hotBg from './assets/hot.jpg'
 import coldBg from './assets/cold.jpg'
 import cloudBg from './assets/cloud.jpg'
 import rainBg from './assets/rain.jpg'
+import mistyBg from './assets/misty.jpg'
 import Description from './components/Descriptions'
 import { useEffect, useState } from 'react'
 import getFormattedWeatherData from './weatherService'
@@ -29,8 +30,68 @@ function App() {
     setUnits(isCelsius ? 'metric' : 'imperial');
   }
 
+  //function to get the background image based on description
+  const getBackgroundImage = () => {
+    if (weather) {
+      const weatherDescription = weather.description.toLowerCase();
+  
+      switch (weatherDescription) {
+
+        case 'clear sky':
+        case 'few clouds':
+
+          return hotBg; 
+
+        case 'scattered clouds':
+        case 'broken clouds':
+        case 'overcast clouds':
+          return cloudBg;
+
+        case 'mist':	
+        case 'smoke':	
+        case 'haze':	 
+        case 'sand/dust whirls':	 
+        case 'fog':	 
+        case 'sand':	 
+        case 'dust':	 
+        case 'volcanic': 
+        case 'squalls':	 
+        case 'tornado':
+          return mistyBg; 
+        
+        case 'light snow':	 	
+	      case 'snow': 
+        case 'heavy snow':	 
+        case 'sleet':
+        case 'light shower sleet':	 
+        case 'shower sleet':	 
+        case 'light rain and snow': 
+        case 'rain and snow':	 
+        case 'light shower snow':	 
+        case 'shower snow': 
+        case 'heavy shower snow':
+          return coldBg; 
+        
+        case 'light rain':
+        case 'moderate rain':
+        case 'heavy intensity rain':
+        case 'very heavy rain':
+        case 'extreme rain': 
+	      case 'freezing rain':	
+        case 'light intensity shower rain':	
+	      case 'shower rain':
+        case 'heavy intensity shower rain': 
+	      case 'ragged shower rain':
+         return rainBg;
+        
+        default:
+          return cloudBg; // Default to cold background if the description doesn't match any specific case
+      }
+    }
+  }
+
   return (
-     <div className='app' style={{backgroundImage: `url(${coldBg})`}}>
+     <div className='app' style={{backgroundImage: `url(${getBackgroundImage()})`}}>
         <div className='overlay'>
           {
             weather && (
